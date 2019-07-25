@@ -1,0 +1,22 @@
+<div id="mainContainerRepleace">
+    <div class="card mb-4" th:each="catalog : ${model.catalogList}"
+         th:object="${catalog}">
+        <div class="blog-list-group-item">
+            <a href="javascript:void(0)" th:attr="catalogId=*{id}"
+               class="blog-query-by-catalog"
+               th:onclick="catalogSearch([[*{user.username}]],[[*{id}]])">
+                [[*{name}]]
+            </a>
+            <span class="blog-right" th:attr="catalogName=*{name}">
+                <a href="javascript:void(0)" th:if="${isCatalogsOwner}" class="blog-edit-catalog"
+                   data-toggle="modal"
+                   data-target="#flipFlop" role="button" th:attr="catalogId=*{id}"><i
+                        class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" th:if="${isCatalogsOwner}" class="blog-delete-catalog"
+                   th:attr="catalogId=*{id}"><i class="fa fa-times" aria-hidden="true"></i></a>
+            </span>
+        </div>
+    </div>
+</div>
+<!-- Pagination -->
+<div th:replace="~{fragment/page :: page}">...</div>

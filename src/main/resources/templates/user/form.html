@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{fragment/header :: header}"></head>
+<body>
+<div class="container blog-content-container">
+    <h3 th:text="${userModel.title}"></h3>
+    <form action="/user" th:action="@{/user}" method="post" th:object="${userModel.user}">
+        <input type="hidden" name="id" th:value="*{id}"/>
+        名称：<input class="form-control" type="text" name="name" th:value="*{name}"/>
+        邮箱：<input class="form-control" type="email" name="email" th:value="*{email}"/> <br/>
+        <input class="btn btn-default" type="submit" value="添加"/>
+    </form>
+</div>
+<div th:replace="~{fragment/footer :: footer}"></div>
+</body>
+</html>

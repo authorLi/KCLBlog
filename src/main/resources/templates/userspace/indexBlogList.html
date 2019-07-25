@@ -1,0 +1,34 @@
+<div id="mainContainerRepleace">
+    <div class="card mb-4" th:if="${model.blogModel.content eq null || #lists.isEmpty(model.blogModel.content)}">
+        <div class="card-block">暂无相关博文</div>
+    </div>
+    <div class="card mb-4" th:if="${model.blogModel.content ne null}" th:each="blog : ${model.blogModel.content}"
+         th:object="${blog}">
+        <div class="card-block">
+            <h2 class="card-title">
+                <span>
+			      <a th:href="'/u/' + *{username}" th:title="*{username}">
+			        <img src="/images/avatar-defualt.jpg"
+                         th:src="*{avatar} == null ? '/images/avatar-defualt.jpg' : *{avatar}"
+                         class="blog-avatar-50">
+			      </a>
+				</span>
+                <a href="/u/waylau/blogs/1" class="card-link" title="waylau"
+                   th:href="'/u/view/' + *{username} + '/blogs/' + *{blogId}"
+                   th:title="*{username}" th:text="*{title}">
+                    OAuth 2.0 认证的原理与实践
+                </a></h2>
+            <p class="card-text" th:text="*{summary}">使用 OAuth 2.0
+                认证的的好处是显然易见的。你只需要用同一个账号密码，就能在各个网站进行访问，而免去了在每个网站都进行注册的繁琐过程。 本文将介绍
+                OAuth 2.0 的原理，并基于 Spring Security 和 GitHub 账号，来演示 OAuth 2.0 的认证的过程。</p>
+            <div class="card-text">
+                发表于 [[*{#dates.format(createTime, 'yyyy-MM-dd')}]]
+                <i class="fa fa-eye" aria-hidden="true" th:text="*{viewed}">210</i>
+                <i class="fa fa-heart-o" aria-hidden="true" th:text="*{likes}">10</i>
+                <i class="fa fa-comment-o" aria-hidden="true" th:text="*{comment}">110</i>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Pagination -->
+<div th:replace="~{fragment/page :: page}">...</div>

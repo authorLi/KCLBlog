@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="row" id="mainContainerRepleace" th:each="comment,commentStat : ${comments}" th:object="${comment}">
+    <h2 class="card-title col-lg-1 col-md-2">
+		<span>
+		  <a href="/u/waylau" th:href="'/u/'+ *{user.username}" title="waylau"
+             th:title="*{user.username}">
+		    <img src="/images/avatar-defualt.jpg"
+                 th:src="*{user.avatar} == null ? '/images/avatar-defualt.jpg' : *{user.avatar}"
+                 class="blog-avatar-50">
+		  </a>
+		</span>
+    </h2>
+    <div class="card-text col-lg-11 col-md-10">
+        <a href="/u/waylau" th:href="'/u/'+ *{user.username}" class="card-link" th:text="*{user.username}">waylau</a>
+        [[${#dates.format(comment.comment.createtime, 'yyyy-MM-dd HH:mm')}]]
+        <a href="javascript:void(0)" class="blog-delete-comment"
+           th:attr="commentId=${comment.comment.id}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+        <p th:text="*{comment.content}">不错哦，顶起！</p>
+        <input type="hidden" name="blogId" th:value="${comment.comment.blogid}" id="blogId">
+    </div>
+</div>
+</body>
+<script src="../../js/userspace/blog.js" th:src="@{/js/userspace/blog.js}"></script>
+</html>

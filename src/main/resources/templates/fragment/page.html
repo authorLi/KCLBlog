@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<nav data-th-fragment="page" data-th-if="${model.blogModel.totalPages gt 0}" data-th-object="${model.blogModel}">
+
+    <!-- 处理页数小于等于7 的情况 -->
+    <ul class="pagination" data-th-if="${model.blogModel.totalPages le 7}" >
+        <!-- 总记录数 -->
+        <li class="tbpage-total-elements disabled">共[[${model.blogModel.totalElements}]]条</li>
+
+        <!-- 页面大小 -->
+        <!--<select class="custom-select tbpage-size" data-th-attr="pageIndex=${model.blogModel.number}">-->
+            <!--<option data-th-each="i : ${#arrays.toIntegerArray({5,10,40,100})}" data-th-value="${i}"-->
+                    <!--data-th-selected="${i eq model.blogModel.size}" data-th-text="${i}"></option>-->
+        <!--</select>-->
+
+        <!-- 上一页 -->
+        <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} - 1" aria-label="Previous"
+            th:onclick="pageSearch([[${model.blogModel.number} - 1]]);">
+                <span aria-hidden="true">«</span>
+            </a>
+        </li>
+
+        <!-- 迭代生成页码 -->
+        <li class="page-item" data-th-each="i : ${#numbers.sequence(1, model.blogModel.totalPages)}"
+            data-th-classappend="${(model.blogModel.number + 1) eq i} ? 'active' : ''" >
+            <a class="page-link tbpage-item" data-th-attr="pageIndex=${i} - 1" href="javascript:void(0);"
+            th:onclick="pageSearch([[${i} - 1]]);">
+                <span data-th-text="${i}"></span>
+            </a>
+        </li>
+
+        <!-- 下一页 -->
+        <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} + 1" aria-label="Next"
+               th:onclick="pageSearch([[${model.blogModel.number} + 1]]);">
+                <span aria-hidden="true">»</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- 处理页数大于7 的情况 -->
+    <ul class="pagination" data-th-if="${model.blogModel.totalPages gt 7}" >
+        <!-- 总记录数 -->
+        <li class="tbpage-total-elements disabled">共[[${model.blogModel.totalElements}]]条</li>
+
+        <!-- 页面大小 -->
+        <!--<select class="custom-select tbpage-size" data-th-attr="pageIndex=${model.blogModel.number}">-->
+            <!--<option data-th-each="i : ${#arrays.toIntegerArray({5,10,40,100})}" data-th-value="${i}"-->
+                    <!--data-th-selected="${i eq model.blogModel.size}" data-th-text="${i}"></option>-->
+        <!--</select>-->
+
+        <!-- 上一页 -->
+        <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} - 1" aria-label="Previous"
+            th:onclick="pageSearch([[${model.blogModel.number} - 1]]);">
+                <span aria-hidden="true">«</span>
+            </a>
+        </li>
+
+        <!-- 首页 -->
+        <li class="page-item" data-th-classappend="${(model.blogModel.number + 1) eq 1} ? 'active' : ''" >
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=0"
+            th:onclick="pageSearch(0)">1</a>
+        </li>
+
+
+        <!-- 当前页面小于等于4 -->
+        <li class="page-item" data-th-if="${(model.blogModel.number + 1) le 4}" data-th-each="i : ${#numbers.sequence(2,5)}"
+            data-th-classappend="${(model.blogModel.number + 1) eq i} ? 'active' : ''" >
+            <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1"
+            th:onclick="pageSearch([[${i} - 1]]);">
+                <span data-th-text="${i}"></span>
+            </a>
+        </li>
+
+        <li class="page-item disabled" data-th-if="${(model.blogModel.number + 1) le 4}">
+            <a href="javascript:void(0);" class="page-link tbpage-item">
+                <span aria-hidden="true">...</span>
+            </a>
+        </li>
+
+        <!-- 最后一页与当前页面之差，小于等于3 -->
+        <li class="page-item disabled" data-th-if="${(model.blogModel.totalPages-(model.blogModel.number + 1)) le 3}">
+            <a href="javascript:void(0);" class="page-link tbpage-item">
+                <span aria-hidden="true">...</span>
+            </a>
+        </li>
+        <li class="page-item" data-th-if="${(model.blogModel.totalPages-(model.blogModel.number + 1)) le 3}" data-th-each="i : ${#numbers.sequence(model.blogModel.totalPages-4, model.blogModel.totalPages-1)}"
+            data-th-classappend="${(model.blogModel.number + 1) eq i} ? 'active' : ''" >
+            <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1"
+            th:onclick="pageSearch([[${i} - 1]]);">
+                <span data-th-text="${i}"></span>
+            </a>
+        </li>
+
+        <!-- 最后一页与当前页面之差大于3，且  当前页面大于4-->
+
+        <li class="page-item disabled" data-th-if="${((model.blogModel.number + 1) gt 4) && ((model.blogModel.totalPages-(model.blogModel.number + 1)) gt 3 )}">
+            <a href="javascript:void(0);" class="page-link tbpage-item">
+                <span aria-hidden="true">...</span>
+            </a>
+        </li>
+        <li class="page-item" data-th-if="${((model.blogModel.number + 1) gt 4) && ((model.blogModel.totalPages-(model.blogModel.number + 1)) gt 3 )}" >
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number}"
+            th:onclick="pageSearch([[${model.blogModel.number}]]);">[[${model.blogModel.number}]]</a>
+        </li>
+        <li class="page-item active" data-th-if="${((model.blogModel.number + 1) gt 4) && ((model.blogModel.totalPages-(model.blogModel.number + 1)) gt 3 )}">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} + 1"
+            th:onclick="pageSearch([[${model.blogModel.number} + 1]]);">[[${model.blogModel.number + 1}]]</a>
+        </li>
+        <li class="page-item" data-th-if="${((model.blogModel.number + 1) gt 4) && ((model.blogModel.totalPages-(model.blogModel.number + 1)) gt 3 )}">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} + 2"
+            th:onclick="pageSearch([[${model.blogModel.number} + 2]]);">[[${model.blogModel.number + 2}]]</a>
+        </li>
+
+        <li class="page-item disabled"  data-th-if="${((model.blogModel.number + 1) gt 4) && ((model.blogModel.totalPages-(model.blogModel.number + 1)) gt 3 )}">
+            <a href="javascript:void(0);" class="page-link tbpage-item">
+                <span aria-hidden="true">...</span>
+            </a>
+        </li>
+
+        <!-- 最后一页 -->
+        <li class="page-item" data-th-classappend="${(model.blogModel.number + 1) eq model.blogModel.totalPages} ? 'active' : ''" >
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.totalPages} - 1"
+            th:onclick="pageSearch([[${model.blogModel.totalPages}]]);">[[${model.blogModel.totalPages}]]</a>
+        </li>
+
+        <!-- 下一页 -->
+        <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
+            <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${model.blogModel.number} + 1" aria-label="Next"
+            th:onclick="pageSearch([[${model.blogModel.number} + 1]]);">
+                <span aria-hidden="true">»</span>
+            </a>
+        </li>
+    </ul>
+
+
+</nav>
+
+</body>
+</html>

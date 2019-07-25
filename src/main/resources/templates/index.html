@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div class="wrapper">
+    <!-- Page Content -->
+    <div th:replace="~{fragment/header :: header}"></div>
+    <div class="container blog-content-container">
+
+        <div class="row">
+
+            <!-- Blog Entries Column -->
+            <h2 th:if="${model.blogModel eq null}">暂无博文</h2>
+            <div class="col-md-8" id="mainContainer">
+                <div th:each="blogs : ${model.blogModel.content}">
+                    <!-- Blog Post -->
+                    <div class="card mb-4">
+                        <div class="card-block">
+                            <h2 class="card-title">
+							<span>
+			                  <a th:href="'/u/' + ${blogs.username}" th:title="${blogs.username}">
+			                    <img src="/images/avatar-defualt.jpg"
+                                     th:src="${blogs.avatar} == null ? '/images/avatar-defualt.jpg' : ${blogs.avatar}"
+                                     class="blog-avatar-50">
+			                  </a>
+					        </span>
+                                <a class="card-link"
+                                   th:href="'/u/view/' + ${blogs.username} + '/blogs/' + ${blogs.blogId}"
+                                   th:title="${blogs.username}" th:text="${blogs.title}">
+                                    OAuth 2.0 认证的原理与实践
+                                </a></h2>
+                            <p class="card-text" th:text="${blogs.summary}">使用 OAuth 2.0
+                                认证的的好处是显然易见的。你只需要用同一个账号密码，就能在各个网站进行访问，而免去了在每个网站都进行注册的繁琐过程。 本文将介绍
+                                OAuth 2.0 的原理，并基于 Spring Security 和 GitHub 账号，来演示 OAuth 2.0 的认证的过程。</p>
+                            <div class="card-text">
+                                <a th:text="${blogs.username}" th:href="'/u/' + ${blogs.username}"></a> 发表于[[${#dates.format(blogs.createTime, 'yyyy-MM-dd')}]] <i class="fa fa-eye" aria-hidden="true" th:text="${blogs.viewed}">210</i>
+                                <i class="fa fa-heart-o" aria-hidden="true" th:text="${blogs.likes}">10</i> <i
+                                    class="fa fa-comment-o"
+                                    aria-hidden="true" th:text="${blogs.comment}">110</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div th:replace="~{fragment/page :: page}">...</div>
+            </div>
+
+            <!-- 右侧栏目 -->
+            <div class="col-md-4">
+                <div>
+                    <!-- 热门标签 -->
+                    <div class="card ">
+                        <h5 class="card-header"><i class="fa fa-tags" aria-hidden="true"></i> 热门标签</h5>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-lg-12" >
+                                    <a th:each="tag, tagStat : ${tags}" th:object="${tag}" href="/blogs?keyword=1" th:href="'/blogs/search?keyword=' +  *{name}">
+                                        <span class="badge" th:classappend="${tagStat.index} eq 0 ? 'badge-danger': (${tagStat.index} eq 1 ? 'badge-warning':(${tagStat.index} eq 2 ? 'badge-info':'badge-default'))"th:text="*{name}">Web Design</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 热门用户 -->
+                    <div class="card my-4">
+                        <h5 class="card-header"><i class="fa fa-users" aria-hidden="true"></i> 热门用户</h5>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-lg-12">
+								<span th:each="user: ${users}" th:object="${user}">
+				                  <a href="/u/waylau" th:href="'/u/' + *{username}" title="waylau" th:title="*{username}">
+				                    <img src="/images/avatar-defualt.jpg" th:src="*{avatar} == null ? '/images/avatar-defualt.jpg' : *{avatar}" class="blog-avatar-50">
+				                  </a>
+				                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 热门文章 -->
+                    <div class="card my-4">
+                        <h5 class="card-header"><i class="fa fa-fire" aria-hidden="true"></i> 热门文章</h5>
+
+                        <ul class="list-group" th:each="hotblog , hotblogStat : ${hotest}" th:object="${hotblog}">
+                            <a  th:href="'/u/view/'+*{username} +'/blogs/'+ *{blogId}" class="list-group-item">
+                                [[*{title}]]<span class="badge badge-pill" th:classappend="${hotblogStat.index} eq 0 ? 'badge-danger': (${hotblogStat.index} eq 1 ? 'badge-warning':(${hotblogStat.index} eq 2 ? 'badge-info':'badge-default'))">[[*{viewed} + *{comment}]]</span>
+                            </a>
+                        </ul>
+
+                    </div>
+
+                    <!-- 最新发布 -->
+                    <div class="card my-4">
+                        <h5 class="card-header"><i class="fa fa-line-chart" aria-hidden="true"></i> 最新发布</h5>
+                        <div class="list-group">
+                            <ul class="list-group" th:each="newblog : ${newest}" th:object="${newblog}">
+                                <a  th:href="'/u/view/'+*{username} +'/blogs/'+ *{blogId}" class="list-group-item" th:text="*{title}">
+                                </a>
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+
+    <div th:replace="~{fragment/footer :: footer}">...</div>
+    <!-- JavaScript -->
+    <script src="../../js/index.js" th:src="@{/js/index.js}"></script>
+</div>
+</body>
+</html>
